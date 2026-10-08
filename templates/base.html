@@ -1,0 +1,101 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <title>
+        {% block title %}SNK Burger{% endblock %}
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/style.css' %}?v=5"
+    >
+</head>
+
+<body>
+    <header class="header">
+        <a
+            href="{% url 'restaurant:home' %}"
+            class="logo"
+        >
+            <span>SNK</span> BURGER
+        </a>
+
+        <nav class="navigation">
+            <a href="{% url 'restaurant:home' %}">
+                Accueil
+            </a>
+
+            <a href="{% url 'restaurant:menu' %}">
+                Notre menu
+            </a>
+
+{% if user.is_authenticated %}
+    <details class="account-dropdown">
+        <summary class="account-trigger">
+            <span class="account-avatar">
+                {{ user.first_name|default:user.username|first|upper }}
+            </span>
+
+            <span>
+                {{ user.first_name|default:user.username|title }}
+            </span>
+
+            <span class="account-arrow">⌄</span>
+        </summary>
+
+        <div class="account-menu">
+            <a href="{% url 'accounts:profile' %}">
+                👤 Mon profil
+            </a>
+
+            <a href="{% url 'restaurant:order_history' %}">
+                🛍️ Mes commandes
+            </a>
+
+            <form method="post" action="{% url 'accounts:logout' %}">
+                {% csrf_token %}
+
+                <button type="submit" class="account-logout">
+                    ↪ Déconnexion
+                </button>
+             </form>
+            </div>
+        </details>
+     {% else %}
+                <a href="{% url 'accounts:login' %}">Connexion
+                </a>
+
+                <a href="{% url 'accounts:register' %}">Inscription
+                </a>
+            {% endif %}
+
+            <a href="{% url 'restaurant:cart' %}" class="cart-button">
+                Panier
+               <span>{{ cart_count }}</span>
+            </a>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer class="footer">
+        <strong>SNK Burger</strong>
+
+        <p>Livraison 7j/7 de 22 h à 5 h</p>
+
+        <p>Téléphone : 06 52 26 57 10</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Commande #{{ order.id }} | SNK Burger
+{% endblock %}
+
+{% block content %}
+<section class="cart-page order-detail-page">
+    <p class="small-title orange">
+        SUIVI DE LIVRAISON
+    </p>
+
+    <h1>Commande #{{ order.id }}</h1>
+
+    {% if order.status == "cancelled" %}
+        <div class="cancelled-message">
+            Cette commande a été annulée.
+        </div>
+    {% else %}
+        <div class="tracking">
+            {% for step in steps %}
+                <div
+                    class="tracking-step
+                    {% if step.completed %}completed{% endif %}
+                    {% if step.current %}current{% endif %}"
+                >
+                    <span class="tracking-circle">
+                        {% if step.completed %}✓{% else %}{{ forloop.counter }}{% endif %}
+                    </span>
+
+                    <strong>{{ step.label }}</strong>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="order-detail-grid">
+        <article class="order-card">
+            <div class="order-header">
+                <div>
+                    <h2>Produits</h2>
+
+                    <p>
+                        {{ order.created_at|date:"d/m/Y à H:i" }}
+                    </p>
+                </div>
+
+                <span class="order-status status-{{ order.status }}">
+                    {{ order.get_status_display }}
+                </span>
+            </div>
+
+            <div class="order-products">
+                {% for item in order.items.all %}
+                    <p>
+                        <span>
+                            {{ item.quantity }} × {{ item.product_name }}
+                        </span>
+
+                        <strong>
+                            {{ item.subtotal }} €
+                        </strong>
+                    </p>
+                {% endfor %}
+            </div>
+
+            <div class="order-footer">
+                <span>Total</span>
+                <strong>{{ order.total }} €</strong>
+            </div>
+        </article>
+
+        <aside class="delivery-address">
+            <h2>Adresse de livraison</h2>
+
+            <strong>{{ order.customer_name }}</strong>
+            <p>{{ order.address }}</p>
+            <p>{{ order.postal_code }} {{ order.city }}</p>
+            <p>{{ order.phone }}</p>
+
+            {% if order.notes %}
+                <h3>Instructions</h3>
+                <p>{{ order.notes }}</p>
+            {% endif %}
+        </aside>
+    </div>
+
+    <a
+        href="{% url 'restaurant:order_history' %}"
+        class="primary-button"
+    >
+        Retour à mes commandes
+    </a>
+</section>
+{% endblock %}

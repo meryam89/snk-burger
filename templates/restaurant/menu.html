@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Notre menu | SNK Burger
+{% endblock %}
+
+{% block content %}
+<section class="menu-section">
+    <div class="section-heading">
+        <p class="small-title orange">
+            LA CARTE SNK
+        </p>
+
+        <h1>Notre menu</h1>
+
+        <p>
+            Choisissez vos produits et composez votre commande.
+        </p>
+    </div>
+
+    <nav class="category-navigation">
+        {% for category in categories %}
+            <a href="#{{ category.slug }}">
+                {{ category.name }}
+            </a>
+        {% endfor %}
+    </nav>
+
+    {% for category in categories %}
+        <section
+            class="category"
+            id="{{ category.slug }}"
+        >
+            <div class="category-title">
+                <h2>{{ category.name }}</h2>
+
+                <span>
+                    {{ category.products.count }} produits
+                </span>
+            </div>
+
+            <div class="products-grid">
+                {% for product in category.products.all %}
+                    {% if product.is_available and product.stock > 0 %}
+                        <article class="product-card">
+                            <div class="product-image">
+
+                            {% if product.image %}
+                                <img
+                                    src="{{ product.image.url }}"
+                                    alt="{{ product.name }}"
+                                >
+                                {% else %}
+                                    {% if category.slug == "boissons" %}
+                                        <span role="img" aria-label="Boisson">🥤</span>
+                                    {% elif category.slug == "desserts" %}
+                                        <span role="img" aria-label="Dessert">🍰</span>
+                                    {% elif category.slug == "tiramisu-xl" %}
+                                        <span role="img" aria-label="Tiramisu">🍮</span>
+                                    {% elif category.slug == "menus-duo" %}
+                                        <span role="img" aria-label="Menu duo">🍔🥤</span>
+                                    {% else %}
+                                        <span role="img" aria-label="Burger">🍔</span>
+                                    {% endif %}
+                                {% endif %}
+
+
+                                <div class="stock">
+                                    Disponible
+                                </div>
+                            </div>
+
+                            <div class="product-information">
+                                <div>
+                                    <p class="product-category">
+                                        {{ category.name }}
+                                    </p>
+
+                                    <h3>{{ product.name }}</h3>
+
+                                    <p class="description">
+                                        {{ product.description }}
+                                    </p>
+                                </div>
+
+                                <div class="product-bottom">
+                                    <strong>
+                                        {{ product.price }} €
+                                    </strong>
+
+                                    <form
+                                        method="post"
+                                        action="{% url 'restaurant:add_to_cart' product.id %}"
+                                    >
+                                        {% csrf_token %}
+
+                                        <button
+                                            type="submit"
+                                            class="add-button"
+                                            title="Ajouter {{ product.name }}"
+                                        >
+                                            +
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </article>
+                    {% endif %}
+                {% empty %}
+                    <p>Aucun produit disponible.</p>
+                {% endfor %}
+            </div>
+        </section>
+    {% endfor %}
+</section>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Accueil | SNK Burger
+{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-content">
+        <p class="small-title">
+            LIVRAISON 7J/7 · 22 H — 5 H
+        </p>
+
+        <h1>
+            Une explosion de
+            <span>saveurs nocturnes</span>
+        </h1>
+
+        <p class="hero-description">
+            Découvrez nos burgers généreux, nos menus duo
+            et nos desserts préparés pour vos faims nocturnes.
+        </p>
+
+        <a
+            href="{% url 'restaurant:menu' %}"
+            class="primary-button"
+        >
+            Découvrir notre menu
+        </a>
+    </div>
+
+    <div class="hero-decoration">
+        <div class="burger-symbol">🍔</div>
+    </div>
+</section>
+
+<section class="home-services">
+    <article>
+        <span>🍔</span>
+        <h2>Produits gourmands</h2>
+
+        <p>
+            Burgers, menus duo, boissons et desserts.
+        </p>
+    </article>
+
+    <article>
+        <span>🛵</span>
+        <h2>Livraison nocturne</h2>
+
+        <p>
+            Livraison tous les jours entre 22 h et 5 h.
+        </p>
+    </article>
+
+    <article>
+        <span>📞</span>
+        <h2>Commande rapide</h2>
+
+        <p>
+            Contactez-nous au 06 52 26 57 10.
+        </p>
+    </article>
+</section>
+
+<section class="delivery-section">
+    <div>
+        <p class="small-title">
+            UNE FAIM NOCTURNE ?
+        </p>
+
+        <h2>On livre jusqu’à 5 h.</h2>
+    </div>
+
+    <a
+        href="{% url 'restaurant:menu' %}"
+        class="secondary-button"
+    >
+        Commander maintenant
+    </a>
+</section>
+{% endblock %}

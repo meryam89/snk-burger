@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Mon panier | SNK Burger
+{% endblock %}
+
+{% block content %}
+<section class="cart-page">
+    <p class="small-title orange">
+        VOTRE COMMANDE
+    </p>
+
+    <h1>Mon panier</h1>
+
+    {% if items %}
+        <div class="cart-list">
+            {% for item in items %}
+                <article class="cart-item">
+                    <div class="cart-product">
+                        {% if item.product.image %}
+                            <img
+                                src="{{ item.product.image.url }}"
+                                alt="{{ item.product.name }}"
+                            >
+                        {% else %}
+                            <span class="cart-emoji">🍔</span>
+                        {% endif %}
+
+                        <div>
+                            <h2>{{ item.product.name }}</h2>
+
+                            <p>
+                                {{ item.product.price }} € l’unité
+                            </p>
+                        </div>
+                    </div>
+
+                   <div class="quantity-controls">
+    <form
+        method="post"
+        action="{% url 'restaurant:update_cart' item.product.id %}"
+    >
+        {% csrf_token %}
+
+        <input
+            type="hidden"
+            name="action"
+            value="decrease"
+        >
+
+        <button type="submit">−</button>
+    </form>
+
+    <strong>{{ item.quantity }}</strong>
+
+    <form method="post" action="{% url 'restaurant:update_cart' item.product.id %}">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="increase">
+            <button type="submit">+</button>
+    </form>
+                </div>
+
+                    <strong class="subtotal">
+                        {{ item.subtotal }} €
+                    </strong>
+
+                    <form
+                        method="post"
+                        action="{% url 'restaurant:remove_from_cart' item.product.id %}"
+                    >
+                        {% csrf_token %}
+
+                        <button
+                            type="submit"
+                            class="remove-button"
+                        >
+                            Supprimer
+                        </button>
+                    </form>
+                </article>
+            {% endfor %}
+        </div>
+
+        <div class="cart-total">
+            <span>Total de la commande</span>
+            <strong>{{ total }} €</strong>
+        </div>
+
+        <a href="{% url 'restaurant:checkout' %}" class="checkout-button">
+            Passer la commande
+        </a>
+    {% else %}
+        <div class="empty-cart">
+            <span>🛒</span>
+
+            <h2>Votre panier est vide</h2>
+
+            <p>
+                Ajoutez un burger pour commencer votre commande.
+            </p>
+
+            <a
+                href="{% url 'restaurant:home' %}"
+                class="primary-button"
+            >
+                Voir le menu
+            </a>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}
